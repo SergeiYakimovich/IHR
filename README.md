@@ -1,1 +1,1 @@
-# IHR
+# Ideal HR

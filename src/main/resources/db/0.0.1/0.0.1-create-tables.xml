@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="1" author="yakimovich_sv">
+        <sql dbms="postgresql">
+            -- Таблица пользователей
+            CREATE TABLE candidates (
+                id BIGSERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                address VARCHAR(255) NOT NULL
+            );
+
+            -- Таблица вакансий
+            CREATE TABLE vacancies (
+                id BIGSERIAL PRIMARY KEY,
+                employer VARCHAR(255) NOT NULL
+            );
+
+            -- Справочник навыков
+            CREATE TABLE skills (
+                id BIGSERIAL PRIMARY KEY,
+                name VARCHAR(255) UNIQUE NOT NULL
+            );
+
+            -- ЕДИНАЯ таблица для связей с навыками
+            CREATE TABLE entity_skills (
+                id BIGSERIAL PRIMARY KEY,
+                -- Поле-дискриминатор (определяет, к какой сущности относится запись)
+                entity_type VARCHAR(31) NOT NULL,
+                -- Внешние ключи на разные таблицы (могут быть NULL)
+                candidate_id BIGINT REFERENCES candidates(id) ON DELETE CASCADE,
+                vacancy_id BIGINT REFERENCES vacancies(id) ON DELETE CASCADE,
+                -- Общие поля
+                skill_id BIGINT NOT NULL REFERENCES skills(id),
+                level INTEGER NOT NULL,
+                -- Ограничение: только одна из ссылок (user_id ИЛИ vacancy_id) должна быть заполнена
+                CONSTRAINT chk_entity_ref CHECK (
+                    (candidate_id IS NOT NULL AND vacancy_id IS NULL) OR
+                    (candidate_id IS NULL AND vacancy_id IS NOT NULL)
+                )
+            );
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

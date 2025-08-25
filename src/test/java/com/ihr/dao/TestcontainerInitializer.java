@@ -10,9 +10,10 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public class TestcontainerInitializer {
     @Container
     private static final PostgreSQLContainer<?> DATABASE = new PostgreSQLContainer<>("postgres")
-            .withDatabaseName("mydb")
+            .withDatabaseName("ihr")
             .withUsername("test")
-            .withPassword("test");
+            .withPassword("test")
+            .withInitScript("init_db.sql");
     @DynamicPropertySource
     public static void properties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", DATABASE::getJdbcUrl);

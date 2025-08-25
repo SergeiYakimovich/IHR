@@ -26,7 +26,7 @@ public class VacancyController {
         return vacancyService.findByName(name);
     }
 
-    @PostMapping("/bests")
+    @PostMapping("/find")
     public List<CandidateDto> findBests(@RequestBody @Valid @NotNull VacancyDto vacancyDto) {
         return vacancyService.findBests(vacancyDto);
     }

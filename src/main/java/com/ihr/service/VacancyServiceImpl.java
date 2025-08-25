@@ -1,6 +1,5 @@
 package com.ihr.service;
 
-import com.ihr.dao.CandidateRepository;
 import com.ihr.dao.VacancyEntity;
 import com.ihr.dao.VacancyRepository;
 import com.ihr.dto.CandidateDto;
@@ -19,8 +18,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class VacancyServiceImpl implements VacancyService {
     private final VacancyRepository vacancyRepository;
-    private final CandidateRepository candidateRepository;
     private final VacancyMapper vacancyMapper;
+    private final CandidateService candidateService;
+    private final CandidateMatcher candidateMatcher;
 
     @Override
     @Nonnull
@@ -45,8 +45,8 @@ public class VacancyServiceImpl implements VacancyService {
     }
     @Override
     public List<CandidateDto> findBests(VacancyDto vacancyDto) {
-
-        return null;
+        List<CandidateDto> candidates = candidateService.findAll();
+        return candidateMatcher.findTopCandidates(vacancyDto, candidates, 3);
     }
 
 }

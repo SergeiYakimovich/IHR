@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
-import static com.ihr.factory.CandidateFactory.getUserDto;
+import static com.ihr.factory.CandidateFactory.getCandidateDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -32,10 +32,10 @@ class CandidateControllerTest {
 
     @Test
     void testSave() throws Exception {
-        CandidateDto candidateDto = getUserDto();
+        CandidateDto candidateDto = getCandidateDto();
         when(candidateService.save(any())).thenReturn(candidateDto);
 
-        String contentAsString = mockMvc.perform(MockMvcRequestBuilders.post("/user")
+        String contentAsString = mockMvc.perform(MockMvcRequestBuilders.post("/candidate")
                         .content(objectMapper.writeValueAsString(candidateDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -48,15 +48,15 @@ class CandidateControllerTest {
 
     @Test
     void testSaveFail() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/user")
+        mockMvc.perform(MockMvcRequestBuilders.post("/candidate")
                         .content(objectMapper.writeValueAsString(null))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
 
-        CandidateDto candidateDto = getUserDto();
+        CandidateDto candidateDto = getCandidateDto();
         candidateDto.setName(null);
-        mockMvc.perform(MockMvcRequestBuilders.post("/user")
+        mockMvc.perform(MockMvcRequestBuilders.post("/candidate")
                         .content(objectMapper.writeValueAsString(candidateDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -65,9 +65,9 @@ class CandidateControllerTest {
 
     @Test
     void findByName() throws Exception {
-        when(candidateService.findByName(any())).thenReturn(List.of(getUserDto()));
+        when(candidateService.findByName(any())).thenReturn(List.of(getCandidateDto()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/user")
+        mockMvc.perform(MockMvcRequestBuilders.get("/candidate")
                         .param("name", "Ivan"))
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))
@@ -79,7 +79,7 @@ class CandidateControllerTest {
     void updateAddress() throws Exception {
         when(candidateService.updateAddress(any(), any())).thenReturn(true);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/user/1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/candidate/1")
                         .param("newAddress", "London"))
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))

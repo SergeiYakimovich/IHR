@@ -35,7 +35,7 @@
                 -- Общие поля
                 skill_id BIGINT NOT NULL REFERENCES skills(id),
                 level INTEGER NOT NULL,
-                -- Ограничение: только одна из ссылок (user_id ИЛИ vacancy_id) должна быть заполнена
+                -- Ограничение: только одна из ссылок (candidate_id ИЛИ vacancy_id) должна быть заполнена
                 CONSTRAINT chk_entity_ref CHECK (
                     (candidate_id IS NOT NULL AND vacancy_id IS NULL) OR
                     (candidate_id IS NULL AND vacancy_id IS NOT NULL)

@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,7 +16,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CandidateServiceImplTest {
-    @Spy
+    @Mock
     private CandidateMapper candidateMapper;
     @Mock
     private CandidateRepository candidateRepository;
@@ -27,8 +26,10 @@ class CandidateServiceImplTest {
     @Test
     void save() {
         // given
-        CandidateDto candidateDto = CandidateFactory.getUserDto();
-        when(candidateRepository.save(any())).thenReturn(CandidateFactory.getUserEntity());
+        CandidateDto candidateDto = CandidateFactory.getCandidateDto();
+        when(candidateRepository.save(any())).thenReturn(CandidateFactory.getCandidateEntity());
+        when(candidateMapper.toEntity(any())).thenReturn(CandidateFactory.getCandidateEntity());
+        when(candidateMapper.toDto(any())).thenReturn(candidateDto);
 
         // when
         CandidateDto result = candidateService.save(candidateDto);

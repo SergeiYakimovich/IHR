@@ -23,12 +23,12 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     @Nonnull
     public CandidateDto save(@Nonnull CandidateDto candidateDto) {
-        log.info("Saving user: {}", candidateDto);
+        log.info("Saving candidate: {}", candidateDto);
         CandidateEntity candidateEntity = candidateMapper.toEntity(candidateDto);
         CandidateDto savedCandidate = Optional.of(candidateRepository.save(candidateEntity))
                 .map(candidateMapper::toDto)
                 .orElse(null);
-        log.info("Saved user: {}", savedCandidate);
+        log.info("Saved candidate: {}", savedCandidate);
         return savedCandidate;
     }
 
@@ -43,10 +43,17 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
+    public List<CandidateDto> findAll() {
+        return candidateRepository.findAll().stream()
+                .map(candidateMapper::toDto)
+                .toList();
+    }
+
+    @Override
     public boolean updateAddress(@Nonnull Long id, @Nonnull String newAddress) {
-        log.info("Updating address for user with id: {}, new address: {}", id, newAddress);
+        log.info("Updating address for candidate with id: {}, new address: {}", id, newAddress);
         int result = candidateRepository.updateAddress(id, newAddress);
-        log.info("Updating result: {}", result);
+        log.info("Updated candidate: {}", result);
         return SUCCESS_UPDATE_RESULT == result;
     }
 }
